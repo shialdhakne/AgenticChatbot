@@ -3,6 +3,8 @@ from src.langgraphagenticai.ui.streamlitui.loadui import LoadStreamlitUI
 from src.langgraphagenticai.LLMS.groqllm import GroqLLM
 from src.langgraphagenticai.graph.graph_builder import GraphBuilder
 from src.langgraphagenticai.ui.streamlitui.display_result import DisplayResultStreamlit
+
+ 
 def load_langgraph_agenticai_app():
     """
     Loads and runs the LangGraph AgenticAI application with Streamlit UI.
@@ -19,7 +21,11 @@ def load_langgraph_agenticai_app():
         st.error("Error: Failed to load user input from the UI.")
         return
     
-    user_message = st.chat_input("Enter your message:")
+    # Text input for user message
+    if st.session_state.IsFetchButtonClicked:
+        user_message = st.session_state.timeframe 
+    else :
+        user_message = st.chat_input("Enter your message:")
     
     if user_message:
         try:
