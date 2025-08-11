@@ -5,6 +5,9 @@ from src.langgraphagenticai.tools.search_tool import get_tool, create_tool_node
 from langgraph.prebuilt import tools_condition,ToolNode 
 from src.langgraphagenticai.nodes.chatbot_with_Tool_node import ChatbotWithToolNode
 from src.langgraphagenticai.nodes.ai_news_node import AINewsNode
+from src.langgraphagenticai.tools.emerging_discovery_tool import get_emerging_discovery_tool
+from langgraph.prebuilt import ToolNode
+from src.langgraphagenticai.nodes.emerging_tech_node import EmergingTechNode
 
 class GraphBuilder:
     def __init__(self, model):
@@ -70,7 +73,17 @@ class GraphBuilder:
         self.graph_builder.set_entry_point("fetch_news")
         self.graph_builder.add_edge("fetch_news","summarize_news")
         self.graph_builder.add_edge("summarize_news","save_result")
-        self.graph_builder.add_edge("save_result", END)
+        self.graph_builder.add_edge("save_result", END)   
+        
+    def emerging_tech_builder_graph(self):
+        node = EmergingTechNode(self.llm)
+        self.graph_builder.add_node("fetch_emerging", node.fetch_emerging)
+        self.graph_builder.add_node("summarize_emerging", node.summarize_emerging)
+        self.graph_builder.add_node("save_emerging", node.save_result)
+        self.graph_builder.set_entry_point("fetch_emerging")
+        self.graph_builder.add_edge("fetch_emerging", "summarize_emerging")
+        self.graph_builder.add_edge("summarize_emerging", "save_emerging")
+        self.graph_builder.add_edge("save_emerging", END) 
     
        
     def setup_graph(self, usecase: str):
@@ -82,7 +95,10 @@ class GraphBuilder:
         if usecase == "Chatbot With Web":
             self.chatbot_with_tools_build_graph()
         if usecase == "AI News":
-            self.ai_news_builder_graph()
+            self.ai_news_builder_graph()        
+        if usecase == "Emerging Tech Discovery":
+            self.emerging_tech_builder_graph()
+
 
         return self.graph_builder.compile()
 

@@ -1,3 +1,4 @@
+# File: src/langgraphagenticai/ui/streamlitui/loadui.py
 import streamlit as st
 import os
 
@@ -11,8 +12,12 @@ class LoadStreamlitUI:
     def load_streamlit_ui(self):
         st.set_page_config(page_title= "🤖 " + self.config.get_page_title(), layout="wide")
         st.header("🤖 " + self.config.get_page_title())
-        st.session_state.timeframe = ''
-        st.session_state.IsFetchButtonClicked = False
+
+        # ✅ initialize once (do NOT overwrite on each rerun)
+        st.session_state.setdefault("timeframe", "")
+        st.session_state.setdefault("IsFetchButtonClicked", False)
+        st.session_state.setdefault("IsFetchEmergingClicked", False)
+        st.session_state.setdefault("emerging_field", "Generative AI")
         
         with st.sidebar:
             # Get options from config
@@ -53,7 +58,16 @@ class LoadStreamlitUI:
                 if st.button("🔍 Fetch Latest AI News", use_container_width=True):
                     st.session_state.IsFetchButtonClicked = True
                     st.session_state.timeframe = time_frame
+                    
+            if self.user_controls['selected_usecase'] == "Emerging Tech Discovery":
+                st.subheader("🔍 Emerging Tech Discovery")
+                field = st.text_input(
+                    "Enter topic/field (e.g., quantum AI)", 
+                    value=st.session_state.emerging_field  # keep user's last input
+                )
+                if st.button("🔍 Discover Emerging Tech", use_container_width=True):
+                    st.session_state.IsFetchEmergingClicked = True
+                    st.session_state.emerging_field = field
+                self.user_controls["emerging_field"] = field
 
         return self.user_controls
-            
-            

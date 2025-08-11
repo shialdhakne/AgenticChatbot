@@ -38,3 +38,8 @@ tools = get_tool()
 
 # Create a ToolNode for LangGraph workflows
 tool_node = create_tool_node(tools)
+
+### Emerging Tech Discovery
+- **What it does:** Fetches and summarizes the latest Generative AI topics from arXiv & Hugging Face.
+- **How to use:** Select “Emerging Tech Discovery” in the sidebar → enter a field (e.g. “quantum AI”) → click “Discover Emerging Tech.”
+
